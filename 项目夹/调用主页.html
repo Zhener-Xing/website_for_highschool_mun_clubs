@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调用信息收集</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<h2>调用信息收集</h2>
+<form>
+    <label for="name">姓名：</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="email">电子邮箱：</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="identity">身份</label>
+    <select id="identity" name="identity">
+        <option>投稿人</option>
+        <option>合著人</option>
+    </select><br><br>
+    <label for="document-upload">调用申请表</label><br>
+    <input type="file" id="document-upload" name="document-upload" required><br><br>
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
