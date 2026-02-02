@@ -1,0 +1,2 @@
+# website_for_highschool_mun_clubs
+为了学习前端为高中模联社团做小网站
