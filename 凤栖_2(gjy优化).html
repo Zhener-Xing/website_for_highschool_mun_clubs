@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>凤栖计划</title>
+    <style>
+        /* ===================== 全局样式重置 ===================== */
+        /* 清除所有元素默认的内外边距，统一盒模型，设置默认字体 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* 盒模型：宽高包含边框和内边距 */
+            font-family: "Microsoft Yahei", sans-serif; /* 优先使用微软雅黑，兼容无衬线字体 */
+        }
+
+        /* ===================== 页面基础样式 ===================== */
+        /* 页面主体样式 - 深蓝星空底色 */
+        body {
+            background: #0a0e2a; /* 深蓝色背景模拟夜空，确保优先显示 */
+            overflow-x: hidden; /* 隐藏水平滚动条，避免星空溢出导致滚动 */
+            padding: 20px; /* 页面内边距，避免内容贴边 */
+            position: relative; /* 作为绝对定位元素的参考父级 */
+            color: #333; /* 默认文本颜色 */
+        }
+
+        /* ===================== 星空背景样式 ===================== */
+        /* 星空容器 - 全屏固定定位，不遮挡页面内容 */
+        .stars {
+            position: fixed; /* 固定在视口，滚动页面时位置不变 */
+            top: 0;
+            left: 0;
+            width: 100%; /* 占满视口宽度 */
+            height: 100%; /* 占满视口高度 */
+            pointer-events: none; /* 穿透鼠标事件，不影响下方内容点击 */
+            z-index: 0; /* 层级低于页面内容，避免遮挡 */
+        }
+
+        /* 单颗星星样式 */
+        .star {
+            position: absolute; /* 绝对定位，自由分布在星空容器中 */
+            border-radius: 50%; /* 圆形星星 */
+            /* 绑定两个动画：闪烁 + 移动，均为线性无限循环 */
+            animation: twinkle linear infinite, moveStar linear infinite;
+            opacity: 0; /* 初始透明度为0，由动画控制显示/隐藏 */
+        }
+
+        /* 星星闪烁动画 - 控制透明度变化实现闪烁效果 */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; } /* 开始和结束时透明 */
+            50% { opacity: 1; } /* 中间时刻完全显示 */
+        }
+
+        /* 星星移动动画 - 控制位置偏移实现移动效果 */
+        @keyframes moveStar {
+            0% { transform: translate(0, 0); } /* 初始位置 */
+            100% { 
+                /* 读取CSS变量--move-x/--move-y作为移动终点，实现随机轨迹 */
+                transform: translate(var(--move-x), var(--move-y)); 
+            }
+        }
+
+        /* ===================== 导航栏样式 ===================== */
+        .navbar-container {
+            text-align: center; /* 导航链接居中 */
+            margin: 20px 0; /* 上下外边距 */
+            padding: 15px; /* 内边距 */
+            background: linear-gradient(135deg, #1e3c72, #2a5298); /* 蓝紫渐变背景 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* 阴影增强立体感 */
+            z-index: 1; /* 层级高于星空背景 */
+            position: relative; /* 启用z-index */
+        }
+
+        .navbar {
+            margin: 0 15px; /* 链接之间的间距 */
+            font-size: 18px; /* 字体大小 */
+            color: #fff; /* 白色文字 */
+            padding: 8px 15px; /* 内边距，增大点击区域 */
+            border-radius: 5px; /* 圆角 */
+            text-decoration: none; /* 去除下划线 */
+        }
+
+        /* ===================== 标题图片样式 ===================== */
+        .title-img {
+            width: 100%; /* 宽度自适应 */
+            height: 200px; /* 固定高度 */
+            object-fit: cover; /* 图片裁剪，保持比例 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* 阴影 */
+            margin-bottom: 20px; /* 下外边距 */
+            z-index: 1; /* 层级高于星空背景 */
+            position: relative; /* 启用z-index */
+        }
+
+        /* ===================== 内容卡片样式 ===================== */
+        .content-card {
+            background: #fff; /* 卡片白底 */
+            border-radius: 12px; /* 圆角 */
+            padding: 0; /* 清除内边距（标题和内容单独设置） */
+            margin: 30px 0; /* 上下外边距 */
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2); /* 阴影 */
+            overflow: hidden; /* 隐藏溢出内容，配合圆角 */
+            border: 2px solid transparent; /* 透明边框，用于渐变边框 */
+            /* 双层背景：内层白色填充，外层蓝色渐变边框 */
+            background: linear-gradient(#fff, #fff) padding-box,
+                        linear-gradient(135deg, #64b5f6, #1565c0, #0d47a1) border-box;
+            z-index: 1; /* 层级高于星空背景 */
+            position: relative; /* 启用z-index */
+        }
+
+        /* 卡片标题样式 */
+        .card-title {
+            background: linear-gradient(135deg, #1976d2, #2196f3); /* 蓝色渐变背景 */
+            color: #fff; /* 白色文字 */
+            padding: 15px 20px; /* 内边距 */
+            font-size: 24px; /* 字体大小 */
+            font-weight: bold; /* 加粗 */
+        }
+
+        /* 卡片内容样式 */
+        .card-content {
+            padding: 25px; /* 内边距 */
+            line-height: 1.8; /* 行高，提升阅读体验 */
+            color: #333; /* 黑色文字 */
+            font-size: 16px; /* 字体大小 */
+        }
+
+        /* ===================== 联系方式区域样式 ===================== */
+        .contact {
+            background: linear-gradient(135deg, #1e3c72, #2a5298); /* 蓝紫渐变背景 */
+            color: #fff; /* 白色文字 */
+            padding: 20px; /* 内边距 */
+            border-radius: 10px; /* 圆角 */
+            margin-top: 30px; /* 上外边距 */
+            text-align: center; /* 文字居中 */
+            font-size: 18px; /* 字体大小 */
+            z-index: 1; /* 层级高于星空背景 */
+            position: relative; /* 启用z-index */
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景容器 - 承载所有动态生成的星星 -->
+    <div class="stars" id="stars"></div>
+
+    <!-- 标题图片 - 使用在线蓝色系占位图，避免本地路径错误 -->
+    <div>
+        <img src="https://picsum.photos/1200/200?blue" alt="凤栖计划" class="title-img"/>
+    </div>
+
+    <!-- 导航栏区域 -->
+    <div class="navbar-container">
+        <a href="#" class="navbar">简介</a>
+        <a href="#" class="navbar">开展说明</a>
+        <a href="#" class="navbar">管理条例</a>
+        <a href="#" class="navbar">事务</a>
+        <a href="#" class="navbar">文件下载</a>
+        <a href="#" class="navbar">文件库</a>
+    </div>  
+
+    <!-- 简介卡片 -->
+    <div class="content-card">
+        <div class="card-title">简介</div>
+        <div class="card-content">
+            <p>&emsp;&emsp;凤栖计划是由银川一中凤凰模拟联合国社发起 旨在提升宁夏回族自治区学生模拟联合国活动学术水平的一项长期合作计划...</p>
+        </div>
+    </div>
+
+    <!-- 计划A卡片 -->
+    <div class="content-card">
+        <div class="card-title">计划A - 新手会扶持计划</div>
+        <div class="card-content">
+            <p>&emsp;&emsp;凤栖计划是由银川一中凤凰模拟联合国社发起 旨在提升宁夏回族自治区学生模拟联合国活动学术水平的一项长期合作计划 具体形式包括会议设计外借 学术培训和协同办会 长久以来宁夏回族自治区学生模拟联合国活动的规模和水平均落后于其他省份 凤凰模拟联合国社认为原因有以下几点：<br>
+                1.  大部分中学生对模拟联合国活动并不了解；<br>
+                2.  区内会议设计趣味程度和学术质量并不符合代表预期，难以吸引代表参加；<br>
+                3.  不同学校之间合作并不紧密，独立办会势单力薄。<br>
+                &emsp;&emsp;针对上述问题
+                凤凰模拟联合国充分意识到学生活动的开展，特别是高学术质量模联会议的开展，对于中学生学术兴趣的激发，甚至是未来的选择具有深远意义。为了解决上述问题，助力模拟联合国活动在全区境内的传播，我们特地开展凤栖计划这一长期学术合作计划，希望与区内各校模拟联合国社团达成合作，共同提升宁夏地区模拟联合国活动学术水平。
+                出于凤栖计划的公益性质，凤凰模拟联合国社坚决不从凤栖计划中获取任何经济利益。一切凤栖计划协助会议的会费收取均由申请人全权负责。凤凰模拟联合国社坚决不接触任何凤栖计划会议的任何财务报表。至于申请条件中会费相关要求，均出于公益考虑，如凤栖计划 A 中会费低于 25 元/人的申请条件，便是出于新手友好考虑。无会费收取要求的凤栖计划，会费及物料花费不会影响申请结果。会议结束后的财务盈亏均由申请人负责。
+                出于宁夏地区代表经济情况的考虑，凤栖计划对于代表着装无强制性要求，整洁即可；对于设备携带亦无硬性要求，满足代表完成学术任务的需求即可。
+                所有外借会议设计在会议结束后收回使用权。
+            <hr>
+            </p>
+        </div>
+    </div>
+
+    <!-- 联系方式区域 -->
+    <div class="contact">
+        <p>联系方式：（请填写社团联系方式）</p>
+    </div>
+
+    <!-- 星空动态生成脚本 -->
+    <script>
+        /**
+         * 创建动态星空背景
+         * 功能：生成指定数量的彩色星星，实现随机闪烁和快速移动效果
+         */
+        function createStars() {
+            // 1. 获取星空容器DOM元素
+            const starsContainer = document.getElementById('stars');
+            // 2. 设置星星总数为300颗（按需求调整）
+            const starCount = 2000;
+
+            // 3. 循环生成每一颗星星
+            for (let i = 0; i < starCount; i++) {
+                // 3.1 创建单个星星DOM元素
+                const star = document.createElement('div');
+                star.classList.add('star'); // 添加星星样式类
+
+                // 3.2 随机设置星星大小（1-4px）
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                // 3.3 随机设置星星初始位置（基于视口百分比，确保全屏分布）
+                star.style.left = `${Math.random() * 100}vw`; // 水平位置：0-100%视口宽度
+                star.style.top = `${Math.random() * 100}vh`; // 垂直位置：0-100%视口高度
+
+                // 3.4 生成随机彩色（浅色系，确保在深蓝背景下可见）
+                // 可选颜色池：浅蓝、浅紫、浅粉、浅绿、浅黄色，保证视觉效果柔和
+                const colors = ['#87CEEB', '#E6E6FA', '#FFC0CB', '#98FB98', '#FFFFE0', '#F0E68C', '#D8BFD8'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                star.style.backgroundColor = randomColor; // 设置星星颜色
+
+                // 3.5 设置动画时长（加快移动速度）
+                const twinkleDuration = Math.random() * 5 + 2; // 闪烁时长：2-7秒（随机）
+                const moveDuration = Math.random() * 10 + 5; // 移动时长：10-30秒（随机，原30-80秒，已加快）
+                star.style.animationDuration = `${twinkleDuration}s, ${moveDuration}s`; // 绑定闪烁+移动时长
+
+                // 3.6 设置随机移动轨迹（X/Y轴偏移量）
+                const moveX = Math.random() * 200 - 100; // X轴移动范围：-100px 到 +100px
+                const moveY = Math.random() * 200 - 100; // Y轴移动范围：-100px 到 +100px
+                star.style.setProperty('--move-x', `${moveX}px`); // 绑定X轴移动变量
+                star.style.setProperty('--move-y', `${moveY}px`); // 绑定Y轴移动变量
+
+                // 3.7 设置随机动画延迟（避免所有星星同时闪烁/移动）
+                star.style.animationDelay = `${Math.random() * 10}s`;
+
+                // 3.8 将星星添加到星空容器中
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 页面DOM加载完成后执行星空生成函数（避免DOM未加载导致的错误）
+        document.addEventListener('DOMContentLoaded', createStars);
+    </script>
+</body>
+</html>
