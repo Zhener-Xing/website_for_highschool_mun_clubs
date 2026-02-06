@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请主页</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <form id="application-form">
+       <h2>申请信息收集表单</h2>
+        <label for="name">姓名：</label><br><input type="text" id="name" name="name" required><br><br>
+        <label for="school">学校：</label><br><input type="text" id="school" name="school" required><br><br>
+        <label for="email-box">邮箱：</label><br><input type="email" id="email-box" name="email-box" required><br><br>
+        <label for="type-select">申请类型：</label>
+        <input type="radio" id="type-a" name="type-select" value="type-a" checked>
+        <label for="type-a">凤栖计划 A 类</label>
+        <input type="radio" id="type-b" name="type-select" value="type-b">
+        <label for="type-b">凤栖计划 B 类</label>
+        <input type="radio" id="type-c" name="type-select" value="type-c">
+        <label for="type-c">凤栖计划 C 类</label><br><br>
+        <label for="file-upload">上传申请表：</label><br><input type="file" id="file-upload" name="file-upload" required><br><br>
+        <button type="submit">提交</button>
+</form>
+
+</body>
+</html>
